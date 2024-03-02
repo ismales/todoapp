@@ -5,10 +5,10 @@ import "./taskFilter.css";
 export default function TaskFilter() {
   return (
     <>
-      <span class="todo-count">1 items left</span>
-      <ul class="filters">
+      <span className="todo-count">1 items left</span>
+      <ul className="filters">
         <li>
-          <button class="selected">All</button>
+          <button className="selected">All</button>
         </li>
         <li>
           <button>Active</button>
@@ -17,7 +17,7 @@ export default function TaskFilter() {
           <button>Completed</button>
         </li>
       </ul>
-      <button class="clear-completed">Clear completed</button>
+      <button className="clear-completed">Clear completed</button>
     </>
   );
 }

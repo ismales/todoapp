@@ -1,12 +1,14 @@
-import React from "react";
+import React, { Component } from "react";
 import TaskFilter from "./tasksFilter";
 
 import "./footer.css";
 
-export default function Footer() {
-  return (
-    <div className="footer">
-      <TaskFilter />
-    </div>
-  );
+export default class Footer extends Component {
+  render() {
+    return (
+      <div className="footer">
+        <TaskFilter />
+      </div>
+    );
+  }
 }

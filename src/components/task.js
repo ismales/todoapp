@@ -1,20 +1,39 @@
-import React from "react";
+import React, { Component } from "react";
 
 import "./task.css";
 
-export default function Task({ className, text }) {
-  return (
-    <li className={className}>
-      <div class="view">
-        <input class="toggle" type="checkbox" />
-        <label>
-          <span class="description">{text}</span>
-          <span class="created">created 17 seconds ago</span>
-        </label>
-        <button class="icon icon-edit"></button>
-        <button class="icon icon-destroy"></button>
-      </div>
-      <input type="text" class="edit" value="Editing task" />
-    </li>
-  );
+export default class Task extends Component {
+  state = {
+    done: false,
+  };
+
+  onCheckboxPress = () => {
+    this.setState(({ done }) => {
+      return { done: !done };
+    });
+  };
+
+  render() {
+    const { id, text, onDeleted } = this.props;
+    const { done } = this.state;
+    let classNames = "";
+    if (done) {
+      classNames += " completed";
+    }
+
+    return (
+      <li key={id} className={classNames}>
+        <div className="view">
+          <input className="toggle" type="checkbox" onChange={this.onCheckboxPress} />
+          <label>
+            <span className="description">{text}</span>
+            <span className="created">created 17 seconds ago</span>
+          </label>
+          <button className="icon icon-edit"></button>
+          <button className="icon icon-destroy" onClick={onDeleted}></button>
+        </div>
+        <input type="text" className="edit" defaultValue={text} />
+      </li>
+    );
+  }
 }
