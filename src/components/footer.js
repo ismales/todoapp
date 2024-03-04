@@ -5,9 +5,15 @@ import "./footer.css";
 
 export default class Footer extends Component {
   render() {
+    const { notDoneCount, filterName, selectFilter, clearComplited } = this.props;
     return (
       <div className="footer">
-        <TaskFilter />
+        <TaskFilter
+          notDoneCount={notDoneCount}
+          filterName={filterName}
+          selectFilter={selectFilter}
+          clearComplited={clearComplited}
+        />
       </div>
     );
   }

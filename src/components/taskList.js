@@ -5,11 +5,17 @@ import "./taskList.css";
 
 export default class TaskList extends Component {
   render() {
-    const { todos, onDeleted } = this.props;
+    const { todos, onDeleted, onToggleDone } = this.props;
     return (
       <div className="todo-list">
         {todos?.map((task) => (
-          <Task key={task.id} text={task.text} onDeleted={() => onDeleted(task.id)} />
+          <Task
+            key={task.id}
+            text={task.text}
+            done={task.done}
+            onDeleted={() => onDeleted(task.id)}
+            onToggleDone={() => onToggleDone(task.id)}
+          />
         ))}
       </div>
     );
