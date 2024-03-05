@@ -1,19 +1,18 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import NewTaskForm from "./components/newTaskForm";
-import TaskList from "./components/taskList";
-import Footer from "./components/footer";
+import NewTaskForm from './components/newTaskForm';
+import TaskList from './components/taskList';
+import Footer from './components/footer';
 
-import "./app.css";
+import './application.css';
 
-export default class App extends Component {
+export default class Application extends Component {
   state = {
     tasks: [
-      { id: 1, text: "Completed task", done: false, createdTime: new Date() },
-      { id: 2, text: "Editing task", done: false, createdTime: new Date() },
-      { id: 3, text: "New task", done: false, createdTime: new Date() },
+      { id: 1, text: 'Completed task', done: true, createdTime: new Date() },
+      { id: 3, text: 'New task', done: false, createdTime: new Date() },
     ],
-    filterName: "All",
+    filterName: 'All',
   };
 
   onToggleDone = (id) => {
@@ -51,9 +50,9 @@ export default class App extends Component {
 
   filteredTasks = (tasks, filterName) => {
     switch (filterName) {
-      case "Active":
+      case 'Active':
         return tasks.filter((task) => !task.done);
-      case "Completed":
+      case 'Completed':
         return tasks.filter((task) => task.done);
       default:
         return tasks;
@@ -75,27 +74,25 @@ export default class App extends Component {
 
     const notDoneCount = tasks.length - tasks.filter((task) => task.done).length;
     return (
-      <>
-        <section className="todoapp">
-          <header>
-            <h1>todos</h1>
-            <NewTaskForm onTaskAdded={this.addTask} />
-          </header>
-          <section className="main">
-            <TaskList
-              tasks={this.filteredTasks(tasks, filterName)}
-              onDeleted={this.deleteTask}
-              onToggleDone={this.onToggleDone}
-            />
-            <Footer
-              notDoneCount={notDoneCount}
-              filterName={filterName}
-              selectFilter={this.selectFilter}
-              clearComplited={this.clearComplited}
-            />
-          </section>
+      <section className="todoapp">
+        <header>
+          <h1>todos</h1>
+          <NewTaskForm onTaskAdded={this.addTask} />
+        </header>
+        <section className="main">
+          <TaskList
+            tasks={this.filteredTasks(tasks, filterName)}
+            onDeleted={this.deleteTask}
+            onToggleDone={this.onToggleDone}
+          />
+          <Footer
+            notDoneCount={notDoneCount}
+            filterName={filterName}
+            selectFilter={this.selectFilter}
+            clearComplited={this.clearComplited}
+          />
         </section>
-      </>
+      </section>
     );
   }
 }

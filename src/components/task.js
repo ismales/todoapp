@@ -1,41 +1,51 @@
-import React, { Component } from "react";
-import { formatDistanceToNow } from "date-fns";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { formatDistanceToNow } from 'date-fns';
 
-import "./task.css";
+import './task.css';
 
 export default class Task extends Component {
-  static defaultProps = {
-    task: {
-      done: false,
-      createdTime: new Date(),
-    },
-  };
-
   render() {
     const { task, onDeleted, onToggleDone } = this.props;
     const { id, text, done, createdTime } = task;
-    let classNames = "";
+    let classNames = '';
     let checked = false;
     if (done) {
-      classNames += " completed";
+      classNames += ' completed';
       checked = true;
     }
 
     return (
       <li key={id} className={classNames}>
         <div className="view">
-          <input className="toggle" type="checkbox" onChange={onToggleDone} checked={checked} />
-          <label>
+          <input id={id} className="toggle" type="checkbox" onChange={onToggleDone} checked={checked} />
+          <label htmlFor={id}>
             <span className="description">{text}</span>
-            <span className="created">
-              created {formatDistanceToNow(createdTime, { includeSeconds: true })} ago
-            </span>
+            <span className="created">created {formatDistanceToNow(createdTime, { includeSeconds: true })} ago</span>
           </label>
-          <button className="icon icon-edit"></button>
-          <button className="icon icon-destroy" onClick={onDeleted}></button>
+          <button type="button" aria-label="Edit" className="icon icon-edit" />
+          <button type="button" aria-label="Destoy" className="icon icon-destroy" onClick={onDeleted} />
         </div>
         <input type="text" className="edit" defaultValue={text} />
       </li>
     );
   }
 }
+
+Task.defaultProps = {
+  task: {
+    done: false,
+    createdTime: new Date(),
+  },
+};
+
+Task.propTypes = {
+  task: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    done: PropTypes.bool,
+    createdTime: PropTypes.instanceOf(Date),
+  }),
+  onDeleted: PropTypes.func.isRequired,
+  onToggleDone: PropTypes.func.isRequired,
+};

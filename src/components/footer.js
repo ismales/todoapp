@@ -1,13 +1,11 @@
-import React, { Component } from "react";
-import TaskFilter from "./tasksFilter";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import "./footer.css";
+import TaskFilter from './tasksFilter';
+
+import './footer.css';
 
 export default class Footer extends Component {
-  static defaultProps = {
-    filterName: "All",
-  };
-
   render() {
     const { notDoneCount, filterName, selectFilter, clearComplited } = this.props;
     return (
@@ -22,3 +20,14 @@ export default class Footer extends Component {
     );
   }
 }
+
+Footer.defaultProps = {
+  filterName: 'All',
+};
+
+Footer.propTypes = {
+  notDoneCount: PropTypes.number.isRequired,
+  filterName: PropTypes.string,
+  selectFilter: PropTypes.func.isRequired,
+  clearComplited: PropTypes.func.isRequired,
+};

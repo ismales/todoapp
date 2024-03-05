@@ -1,28 +1,31 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import "./newTaskForm.css";
+import './newTaskForm.css';
 
 export default class NewTaskForm extends Component {
   state = {
-    text: "",
+    text: '',
   };
 
-  changeInputValue = (event) => {
+  changeInputValue(event) {
     this.setState({
       text: event.target.value,
     });
-  };
+  }
 
-  submitTask = (event) => {
+  submitTask(event) {
+    const { text } = this.state;
     const { onTaskAdded } = this.props;
     event.preventDefault();
-    onTaskAdded(this.state.text);
+    onTaskAdded(text);
     this.setState({
-      text: "",
+      text: '',
     });
-  };
+  }
 
   render() {
+    const { text } = this.state;
     return (
       <form className="header" onSubmit={this.submitTask}>
         <input
@@ -30,9 +33,13 @@ export default class NewTaskForm extends Component {
           type="text"
           placeholder="What needs to be done"
           onChange={this.changeInputValue}
-          value={this.state.text}
+          value={text}
         />
       </form>
     );
   }
 }
+
+NewTaskForm.propTypes = {
+  onTaskAdded: PropTypes.func.isRequired,
+};

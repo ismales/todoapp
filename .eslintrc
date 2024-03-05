@@ -1,0 +1,45 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:import/recommended",
+    "airbnb",
+    "plugin:react/jsx-runtime",
+    "prettier",
+  ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "babelOptions": {
+      "presets": ["@babel/preset-react"],
+    },
+  },
+  "plugins": ["react", "@babel"],
+  "rules": {
+    "react/prefer-stateless-function": [0, { "ignorePureComponents": true }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/state-in-constructor": [1, "never"],
+    "react/sort-comp": [0, { "order": ["static-methods"] }],
+    "no-plusplus": "off",
+    "class-methods-use-this": ["error", { "exceptMethods": ["filteredTasks"] }],
+    "no-param-reassign": ["error", { "props": false }],
+    "no-nested-ternary": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "react/forbid-prop-types": "off",
+    "no-shadow": "off",
+    "no-unused-vars": "off",
+  },
+  "settings": {
+    "react": {
+      "version": "detect",
+    },
+  },
+}
