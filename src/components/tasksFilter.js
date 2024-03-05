@@ -3,6 +3,11 @@ import React, { Component } from "react";
 import "./taskFilter.css";
 
 export default class TaskFilter extends Component {
+  static defaultProps = {
+    notDoneCount: 0,
+    filterName: "All",
+  };
+
   render() {
     const { notDoneCount, filterName, selectFilter, clearComplited } = this.props;
     return (

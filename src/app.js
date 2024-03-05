@@ -9,9 +9,9 @@ import "./app.css";
 export default class App extends Component {
   state = {
     tasks: [
-      { id: 1, text: "Completed task", done: false },
-      { id: 2, text: "Editing task", done: false },
-      { id: 3, text: "New task", done: false },
+      { id: 1, text: "Completed task", done: false, createdTime: new Date() },
+      { id: 2, text: "Editing task", done: false, createdTime: new Date() },
+      { id: 3, text: "New task", done: false, createdTime: new Date() },
     ],
     filterName: "All",
   };
@@ -38,7 +38,7 @@ export default class App extends Component {
 
   addTask = (text) => {
     this.setState(({ tasks }) => ({
-      tasks: [...tasks, { id: tasks.length + 1, text }],
+      tasks: [...tasks, { id: tasks.length + 1, text, createdTime: new Date() }],
     }));
   };
 
@@ -61,9 +61,12 @@ export default class App extends Component {
   };
 
   clearComplited = () => {
-    this.setState(() => {
-      const complitedTasks = this.filteredTasks(this.state.tasks, "Completed");
-      return complitedTasks.map((task) => this.deleteTask(task.id));
+    this.setState(({ tasks }) => {
+      const newTasks = tasks.filter((el) => el.done === false);
+
+      return {
+        tasks: newTasks,
+      };
     });
   };
 
@@ -80,7 +83,7 @@ export default class App extends Component {
           </header>
           <section className="main">
             <TaskList
-              todos={this.filteredTasks(tasks, filterName)}
+              tasks={this.filteredTasks(tasks, filterName)}
               onDeleted={this.deleteTask}
               onToggleDone={this.onToggleDone}
             />
