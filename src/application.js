@@ -10,7 +10,7 @@ export default class Application extends Component {
   state = {
     tasks: [
       { id: 1, text: 'Completed task', done: true, createdTime: new Date() },
-      { id: 3, text: 'New task', done: false, createdTime: new Date() },
+      { id: 2, text: 'New task', done: false, createdTime: new Date() },
     ],
     filterName: 'All',
   };

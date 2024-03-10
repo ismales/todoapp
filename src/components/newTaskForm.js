@@ -8,13 +8,14 @@ export default class NewTaskForm extends Component {
     text: '',
   };
 
-  changeInputValue(event) {
-    this.setState({
-      text: event.target.value,
+  changeInputValue = (event) => {
+    this.setState(() => {
+      const newValue = event.target.value;
+      return { text: newValue };
     });
-  }
+  };
 
-  submitTask(event) {
+  submitTask = (event) => {
     const { text } = this.state;
     const { onTaskAdded } = this.props;
     event.preventDefault();
@@ -22,7 +23,7 @@ export default class NewTaskForm extends Component {
     this.setState({
       text: '',
     });
-  }
+  };
 
   render() {
     const { text } = this.state;
