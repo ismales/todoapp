@@ -19,6 +19,7 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/state-in-constructor": [2, "never"],
     "class-methods-use-this": [2, { "exceptMethods": ["filteredTasks"] }],
+    "no-plusplus": 0,
   },
   "settings": {
     "react": {

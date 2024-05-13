@@ -8,10 +8,7 @@ import './application.css';
 
 export default class Application extends Component {
   state = {
-    tasks: [
-      { id: 1, text: 'Completed task', done: true, createdTime: new Date() },
-      { id: 2, text: 'New task', done: false, createdTime: new Date() },
-    ],
+    tasks: [],
     filterName: 'All',
   };
 
@@ -37,7 +34,7 @@ export default class Application extends Component {
 
   addTask = (text) => {
     this.setState(({ tasks }) => ({
-      tasks: [...tasks, { id: tasks.length + 1, text, createdTime: new Date() }],
+      tasks: [...tasks, { id: Math.random(), text, done: false, createdTime: new Date() }],
     }));
   };
 
