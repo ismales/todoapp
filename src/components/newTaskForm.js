@@ -1,77 +1,50 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './newTaskForm.css';
 
-export default class NewTaskForm extends Component {
-  state = {
-    text: '',
-    min: '',
-    sec: '',
-  };
+export default function NewTaskForm({ onTaskAdded }) {
+  const [text, setText] = useState('');
+  const [min, setMin] = useState('');
+  const [sec, setSec] = useState('');
 
-  setText = (e) => {
-    this.setState({
-      text: e.target.value,
-    });
-  };
-
-  setMin = (e) => {
-    this.setState({
-      min: +e.target.value,
-    });
-  };
-
-  setSec = (e) => {
-    this.setState({
-      sec: +e.target.value,
-    });
-  };
-
-  submitTask = (event) => {
-    const { text, min, sec } = this.state;
-    const { onTaskAdded } = this.props;
-    event.preventDefault();
+  const submitTask = (e) => {
+    e.preventDefault();
     onTaskAdded(text, min, sec);
-    this.setState({
-      text: '',
-      min: '',
-      sec: '',
-    });
+    setText('');
+    setMin('');
+    setSec('');
   };
 
-  render() {
-    const { text, min, sec } = this.state;
-    return (
-      <form id="new-todo-form" className="new-todo-form" onSubmit={this.submitTask}>
-        <input
-          name="new-todo"
-          className="new-todo"
-          type="text"
-          placeholder="What needs to be done"
-          onChange={this.setText}
-          value={text}
-        />
-        <input
-          name="new-todo-timer"
-          className="new-todo-form__timer"
-          type="number"
-          onChange={this.setMin}
-          value={min}
-          placeholder="Min"
-        />
-        <input
-          name="new-todo-timer"
-          className="new-todo-form__timer"
-          type="number"
-          onChange={this.setSec}
-          value={sec}
-          placeholder="Sec"
-        />
-        <button type="submit" aria-label="submit" />
-      </form>
-    );
-  }
+  return (
+    <form id="new-todo-form" className="new-todo-form" onSubmit={submitTask}>
+      <input
+        name="new-todo"
+        className="new-todo"
+        type="text"
+        placeholder="What needs to be done"
+        onChange={(e) => setText(e.target.value)}
+        value={text}
+      />
+      <input
+        name="new-todo-timer"
+        className="new-todo-form__timer"
+        type="number"
+        onChange={(e) => setMin(+e.target.value)}
+        value={min}
+        placeholder="Min"
+      />
+      <input
+        name="new-todo-timer"
+        className="new-todo-form__timer"
+        type="number"
+        onChange={(e) => setSec(+e.target.value)}
+        value={sec}
+        placeholder="Sec"
+      />
+      <button type="submit" aria-label="submit" />
+    </form>
+  );
 }
 
 NewTaskForm.propTypes = {

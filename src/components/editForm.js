@@ -1,61 +1,46 @@
 /* eslint-disable class-methods-use-this */
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import './editForm.css';
 
-export default class EditForm extends Component {
-  state = {
-    newText: '',
-  };
+export default function EditForm({ id, text, onEditName, closeEditForm }) {
+  const [newText, setNewText] = useState('');
 
-  componentDidMount() {
-    document.addEventListener('click', this.noSaveEditTask, true);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.noSaveEditTask, true);
-  }
-
-  changeInputValue = (event) => {
-    const newText = event.target.value;
-    this.setState({
-      newText,
-    });
-  };
-
-  saveEditTask = (e) => {
-    e.preventDefault();
-    const { id, onEditName, closeEditForm } = this.props;
-    const { newText } = this.state;
-    onEditName(id, newText);
-    closeEditForm();
-  };
-
-  noSaveEditTask = (e) => {
-    const { closeEditForm } = this.props;
+  const noSaveEditTask = (e) => {
     const editInput = document.querySelector('.edit');
     if (e.target !== editInput || e.keyCode === 27) {
       closeEditForm();
     }
   };
 
-  render() {
-    const { text } = this.props;
+  useEffect(() => {
+    document.addEventListener('click', noSaveEditTask, true);
+    return () => document.removeEventListener('click', noSaveEditTask, true);
+  }, []);
 
-    return (
-      <form id="edit-form" onSubmit={this.saveEditTask}>
-        <input
-          type="text"
-          name="edit-input"
-          className="edit"
-          defaultValue={text}
-          onChange={this.changeInputValue}
-          onKeyDown={this.noSaveEditTask}
-        />
-      </form>
-    );
-  }
+  const changeInputValue = (e) => {
+    setNewText(e.target.value);
+  };
+
+  const saveEditTask = (e) => {
+    e.preventDefault();
+    onEditName(id, newText);
+    closeEditForm();
+  };
+
+  return (
+    <form id="edit-form" onSubmit={saveEditTask}>
+      <input
+        type="text"
+        name="edit-input"
+        className="edit"
+        defaultValue={text}
+        onChange={changeInputValue}
+        onKeyDown={noSaveEditTask}
+      />
+    </form>
+  );
 }
 
 EditForm.defaultProps = {};

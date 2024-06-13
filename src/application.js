@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import NewTaskForm from './components/newTaskForm';
 import TaskList from './components/taskList';
@@ -6,64 +6,40 @@ import Footer from './components/footer';
 
 import './application.css';
 
-export default class Application extends Component {
-  id = 1;
+export default function Application() {
+  const [taskID, setTaskID] = useState(1);
+  const [tasks, setTasks] = useState([]);
+  const [filterName, setFilterName] = useState('All');
 
-  state = {
-    tasks: [],
-    filterName: 'All',
+  useEffect(() => {}, [tasks]);
+
+  const onTaskAdded = (text, min, sec) => {
+    setTasks((prevTasks) => [...prevTasks, { id: taskID, text, min, sec, done: false, createdTime: new Date() }]);
+    setTaskID((id) => id + 1);
   };
 
-  onTaskAdded = (text, min, sec) => {
-    this.setState(({ tasks }) => ({
-      tasks: [...tasks, { id: this.id++, text, min, sec, timerID: 0, done: false, createdTime: new Date() }],
-    }));
+  const onToggleDone = useCallback((id) => {
+    setTasks((prevTasks) => prevTasks.map((task) => (task.id === id ? { ...task, done: !task.done } : task)));
+  }, []);
+
+  const onDeleted = useCallback((id) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  }, []);
+
+  const onEditName = useCallback((id, text) => {
+    setTasks((prevTasks) => prevTasks.map((task) => (task.id === id ? { ...task, text } : task)));
+  }, []);
+
+  const saveTime = useCallback((id, min, sec) => {
+    setTasks((prevTasks) => prevTasks.map((task) => (task.id === id ? { ...task, min, sec } : task)));
+  }, []);
+
+  const selectFilter = (name) => {
+    setFilterName(name);
   };
 
-  onToggleDone = (id) => {
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((el) => el.id === id);
-      const task = tasks[idx];
-      const newTask = { ...task, done: !task.done };
-      const newTasks = [...tasks.slice(0, idx), newTask, ...tasks.slice(idx + 1)];
-      return { tasks: newTasks };
-    });
-  };
-
-  onDeleted = (id) => {
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((el) => el.id === id);
-      const newTasks = [...tasks.slice(0, idx), ...tasks.slice(idx + 1)];
-      return { tasks: newTasks };
-    });
-  };
-
-  onEditName = (id, text) => {
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((el) => el.id === id);
-      const task = tasks[idx];
-      const editTimeTask = { ...task, text };
-      const newTasks = [...tasks.slice(0, idx), editTimeTask, ...tasks.slice(idx + 1)];
-      return { tasks: newTasks };
-    });
-  };
-
-  saveTime = (id, min, sec, timerID) => {
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((el) => el.id === id);
-      const task = tasks[idx];
-      const newTimeTask = { ...task, min, sec, timerID };
-      const newTasks = [...tasks.slice(0, idx), newTimeTask, ...tasks.slice(idx + 1)];
-      return { tasks: newTasks };
-    });
-  };
-
-  selectFilter = (filterName) => {
-    this.setState({ filterName });
-  };
-
-  filteredTasks = (tasks, filterName) => {
-    switch (filterName) {
+  const filteredTasks = (name) => {
+    switch (name) {
       case 'Active':
         return tasks.filter((task) => !task.done);
       case 'Completed':
@@ -73,38 +49,33 @@ export default class Application extends Component {
     }
   };
 
-  clearComplited = () => {
-    this.setState(({ tasks }) => {
-      const newTasks = tasks.filter((el) => el.done === false);
-      return { tasks: newTasks };
-    });
+  const clearComplited = () => {
+    setTasks((prevTasks) => prevTasks.filter((el) => el.done === false));
   };
 
-  render() {
-    const { tasks, filterName } = this.state;
-    const notDoneCount = tasks.length - tasks.filter((task) => task.done).length;
-    return (
-      <section className="todoapp">
-        <header>
-          <h1>todos</h1>
-          <NewTaskForm onTaskAdded={this.onTaskAdded} />
-        </header>
-        <section className="main">
-          <TaskList
-            tasks={this.filteredTasks(tasks, filterName)}
-            onDeleted={this.onDeleted}
-            onToggleDone={this.onToggleDone}
-            onEditName={this.onEditName}
-            saveTime={this.saveTime}
-          />
-          <Footer
-            notDoneCount={notDoneCount}
-            filterName={filterName}
-            selectFilter={this.selectFilter}
-            clearComplited={this.clearComplited}
-          />
-        </section>
+  const notDoneCount = tasks.length - tasks.filter((task) => task.done).length;
+
+  return (
+    <section className="todoapp">
+      <header>
+        <h1>todos</h1>
+        <NewTaskForm onTaskAdded={onTaskAdded} />
+      </header>
+      <section className="main">
+        <TaskList
+          tasks={filteredTasks(filterName)}
+          onDeleted={onDeleted}
+          onToggleDone={(id) => onToggleDone(id)}
+          onEditName={onEditName}
+          saveTime={saveTime}
+        />
+        <Footer
+          notDoneCount={notDoneCount}
+          filterName={filterName}
+          selectFilter={selectFilter}
+          clearComplited={clearComplited}
+        />
       </section>
-    );
-  }
+    </section>
+  );
 }
