@@ -10,7 +10,7 @@ export default function NewTaskForm({ onTaskAdded }) {
 
   const submitTask = (e) => {
     e.preventDefault();
-    onTaskAdded(text, min, sec);
+    onTaskAdded(text, +min, +sec);
     setText('');
     setMin('');
     setSec('');

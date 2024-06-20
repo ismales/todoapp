@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -6,42 +6,23 @@ import EditForm from './editForm';
 
 import './task.css';
 
-export default function Task({ task, onDeleted, onToggleDone, onEditName, saveTime }) {
-  const { id, text, done, createdTime, min, sec } = task;
+export default function Task({ task, onDeleted, onToggleDone, onEditName, startTimer, stopTimer }) {
+  const { id, text, done, min, sec, isActive, createdTime } = task;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [minutes, setMinutes] = useState(+min);
-  const [seconds, setSeconds] = useState(+sec);
-  const timerIdRef = useRef(null);
 
   useEffect(() => {
-    if (isActive && !done) {
-      timerIdRef.current = setInterval(() => {
-        if (minutes === 0 && seconds === 0) {
-          clearInterval(timerIdRef.current);
-        } else if (seconds === 0) {
-          setMinutes((m) => m - 1);
-          setSeconds(59);
-        } else {
-          setSeconds((s) => s - 1);
-        }
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(timerIdRef.current);
-    };
-  }, [isActive, minutes, seconds]);
+    if (done) stopTimer(id);
+  }, [isActive, done]);
 
   const onTimerPlay = () => {
-    if (done) return;
-    setIsActive(true);
+    if (!isActive && !done) {
+      startTimer(id, min, sec);
+    }
   };
 
   const onTimerPause = () => {
-    setIsActive(false);
-    saveTime(id, minutes, seconds);
+    stopTimer(id);
   };
 
   const taskItem = () => {
@@ -51,7 +32,7 @@ export default function Task({ task, onDeleted, onToggleDone, onEditName, saveTi
   };
 
   const taskInfoView = () => {
-    if (isEditing) return 'hidden';
+    if (isEditing && !done) return 'hidden';
     return '';
   };
 
@@ -71,11 +52,10 @@ export default function Task({ task, onDeleted, onToggleDone, onEditName, saveTi
           <span className="task-timer">
             <button type="button" aria-label="Play" className="icon-play icon-hover" onClick={onTimerPlay} />
             <button type="button" aria-label="Pause" className="icon-pause icon-hover" onClick={onTimerPause} />
-            {`${minutes}`.padStart(2, '0')}:{`${seconds}`.padStart(2, '0')}
+            {`${min}`.padStart(2, '0')}:{`${sec}`.padStart(2, '0')}
           </span>
           <span className="created">
-            created {createdTime ? formatDistanceToNow(new Date(createdTime), { includeSeconds: true }) : 'just now'}{' '}
-            ago
+            created {formatDistanceToNow(new Date(createdTime), { includeSeconds: true })}
           </span>
           <div className="task-buttons">
             <button
@@ -84,7 +64,12 @@ export default function Task({ task, onDeleted, onToggleDone, onEditName, saveTi
               className="icon icon-edit icon-hover"
               onClick={() => setIsEditing(true)}
             />
-            <button type="button" aria-label="Destoy" className="icon icon-destroy icon-hover" onClick={onDeleted} />
+            <button
+              type="button"
+              aria-label="Destoy"
+              className="icon icon-destroy icon-hover"
+              onClick={() => onDeleted(id)}
+            />
           </div>
         </label>
       </div>
@@ -109,10 +94,12 @@ Task.propTypes = {
     min: PropTypes.number,
     sec: PropTypes.number,
     done: PropTypes.bool,
+    isActive: PropTypes.bool,
     createdTime: PropTypes.instanceOf(Date),
   }),
   onDeleted: PropTypes.func.isRequired,
   onToggleDone: PropTypes.func.isRequired,
   onEditName: PropTypes.func.isRequired,
-  saveTime: PropTypes.func.isRequired,
+  startTimer: PropTypes.func.isRequired,
+  stopTimer: PropTypes.func.isRequired,
 };

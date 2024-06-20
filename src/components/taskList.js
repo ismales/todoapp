@@ -5,7 +5,7 @@ import Task from './task';
 
 import './taskList.css';
 
-export default function TaskList({ tasks, onDeleted, onToggleDone, onEditName, saveTime }) {
+export default function TaskList({ tasks, onDeleted, onToggleDone, onEditName, startTimer, stopTimer }) {
   return (
     <div className="todo-list">
       {tasks.map((task) => (
@@ -15,7 +15,8 @@ export default function TaskList({ tasks, onDeleted, onToggleDone, onEditName, s
           onDeleted={() => onDeleted(task.id)}
           onToggleDone={() => onToggleDone(task.id)}
           onEditName={onEditName}
-          saveTime={saveTime}
+          startTimer={startTimer}
+          stopTimer={stopTimer}
         />
       ))}
     </div>
@@ -31,5 +32,6 @@ TaskList.propTypes = {
   onDeleted: PropTypes.func.isRequired,
   onToggleDone: PropTypes.func.isRequired,
   onEditName: PropTypes.func.isRequired,
-  saveTime: PropTypes.func.isRequired,
+  startTimer: PropTypes.func.isRequired,
+  stopTimer: PropTypes.func.isRequired,
 };
